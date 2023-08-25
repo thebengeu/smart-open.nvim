@@ -79,8 +79,9 @@ local function ripgrep_scan(basedir, ignore_patterns, on_insert, on_complete)
         return
       end
 
+      local path_separator = package.config:sub(1, 1)
       for line in splitlines(chunk) do
-        if #line > 0 and on_insert(basedir .. "/" .. line) == false then
+        if #line > 0 and on_insert(basedir .. path_separator .. line) == false then
           done = true
           stop()
           return vim.schedule(function()

@@ -19,7 +19,7 @@ local SCORE_MAX = math.huge
 local SCORE_MIN = -math.huge
 local MATCH_MAX_LENGTH = 1024
 
-local path_sep = "/"
+local path_sep = package.config:sub(1, 1)
 
 local fzy = {}
 

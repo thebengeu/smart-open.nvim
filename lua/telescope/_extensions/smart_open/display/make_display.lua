@@ -83,7 +83,8 @@ local function make_display(opts)
     if filename_opts.filename_first then
       -- Transpose order to canonical path order.
       local spacing = 1
-      path = display:sub(#entry.virtual_name + spacing + 1) .. "/" .. entry.virtual_name
+      local path_separator = package.config:sub(1, 1)
+      path = display:sub(#entry.virtual_name + spacing + 1) .. path_separator .. entry.virtual_name
     else
       path = display
     end
