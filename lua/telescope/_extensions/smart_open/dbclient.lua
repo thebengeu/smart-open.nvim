@@ -79,13 +79,14 @@ end
 function DbClient:get_files_in(dir, now)
   now = now or os.time()
 
+  local path_separator = package.config:sub(1, 1)
   local result = self.db:eval(
     [[
   SELECT path, expiration, RANK() OVER ( ORDER BY last_open DESC ) AS recent_rank FROM files
   WHERE expiration > :now AND instr(path, :dir) == 1
   ORDER BY expiration DESC
     ]],
-    { now = now, dir = dir:sub(-1) == "/" and dir or dir .. "/" }
+    { now = now, dir = dir:sub(-1) == path_separator and dir or dir .. path_separator }
   )
 
   return result

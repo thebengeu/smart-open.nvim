@@ -10,7 +10,8 @@ local function fit_dir(path, available, opts)
     return path
   end
 
-  local segments = vim.split(path, "/", {})
+  local path_separator = package.config:sub(1, 1)
+  local segments = vim.split(path, path_separator, {})
   local segment_limits = vim.tbl_map(function(segment)
     return len(segment)
   end, segments)
@@ -39,7 +40,7 @@ local function fit_dir(path, available, opts)
     end
   end
 
-  return table.concat(segments, "/")
+  return table.concat(segments, path_separator)
 end
 
 -- normalize_path ensures that the path is displayed as relative when path is under cwd,
@@ -49,7 +50,8 @@ local function normalize_path(path, cwd)
   local p = Path:new(path)
   local abspath = p:absolute(cwd)
   if vim.startswith(abspath, os_home) and not vim.startswith(cwd, os_home) then
-    return "~/" .. p:make_relative(os_home)
+    local path_separator = package.config:sub(1, 1)
+    return "~" .. path_separator .. p:make_relative(os_home)
   else
     path = p:normalize(cwd)
     return path == "." and "" or path
@@ -85,6 +87,7 @@ local function format_filepath(path, filename, opts, maxlen)
 
     return result, hl_group
   else
+    local path_separator = package.config:sub(1, 1)
     if maxlen and len(path) > maxlen then
       -- There's overflow
       local remaining = maxlen - len(filename)
@@ -96,13 +99,13 @@ local function format_filepath(path, filename, opts, maxlen)
         -- There's just enough space for the filename
         return filename, hl_group
       elseif remaining == 2 then
-        return "…/" .. filename, { { 1, 2 }, "Directory" }
+        return "…" .. path_separator .. filename, { { 1, 2 }, "Directory" }
       end
 
       path = fit_dir(path, remaining, { shorten_to = 0 })
     end
     if path ~= "" then
-      path = path .. "/"
+      path = path .. path_separator
     end
     hl_group = { { 0, len(path) }, "Directory" }
     return path .. filename, hl_group
