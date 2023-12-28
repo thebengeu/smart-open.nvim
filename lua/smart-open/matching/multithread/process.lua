@@ -1,6 +1,6 @@
 -- prompt, cancel_token, options, last_processed_index
 local function process(prompt, cancel_token, encoded_options, encoded_entries)
-  local result_limit = 20
+  local result_limit = 50
 
   local ok, result = pcall(function()
     local options = vim.mpack.decode(encoded_options)

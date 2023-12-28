@@ -12,7 +12,7 @@ local function create_matcher(matching_algorithm, context)
   local slot_count = 4 -- threadpool thread count
   local last_processed_index = 0
   local top_entries = {} -- treat it as ascending (lowest relevance last)
-  local top_entry_count = 20
+  local top_entry_count = 50
   local waiting_threads = 0
   local history_data_cache = {}
 
@@ -40,11 +40,8 @@ local function create_matcher(matching_algorithm, context)
         break
       end
 
-      local entry_to_add = create_entry_data(
-        entry.path,
-        history_data_cache[entry.path] or { frecency = 0, recent_rank = 0 },
-        context
-      )
+      local entry_to_add =
+        create_entry_data(entry.path, history_data_cache[entry.path] or { frecency = 0, recent_rank = 0 }, context)
 
       process_result(vim.tbl_deep_extend("keep", entry_to_add, entry))
     end
